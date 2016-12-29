@@ -29,11 +29,16 @@ def file_save(data_list, web_name):
 	f.close()
 
 def db_save(data_list, web_name):
+	n = 0
 	for i in data_list:
 		i = i.strip()
-		query = "INSERT INTO " + web_name + " (s_date, s_data) VALUES (?, ?)"
-		cur.execute(query, (d_date, i))
+		query = "Select * from "+ web_name + " where s_data = ?"
+		if(len(cur.execute(query, (i,)).fetchall()) is 0):
+			n = n+1
+			query = "INSERT INTO " + web_name + " (s_date, s_data) VALUES (?, ?)"
+			cur.execute(query, (d_date, i))
 	db.commit()
+	print(str(n)+" new headlines added")
 		
 try:
 	for url in news_urls:
